@@ -1,41 +1,38 @@
-version: '3.1'
-#20240324修改
-
+version: "3"
 services:
- 
-  subconverter:
-    #image: tindy2013/subconverter:latest  #当前版本0.81 
-    build: ./subconverter/scripts  # commit eef532850633b8d8266240ddb611a14397b2fff7
-    container_name: subconverter
-    restart: always
-    ports:
-      - 25500:25500
-
   subweb:
-    build: ./sub-web   # commit e06b3ed3dc4680e0b4ddbfb592b4ae173a6318dd
-    container_name: sub-web-imgki
-    restart: always
+    image: stilleshan/sub
+    container_name: sub
     ports:
       - 18080:80
-  
-  myurls:
-    build: ./myurls                  # commit 74c886f8c2b2bc111f01d2cac09f4bfdf14dd3e3
-    container_name: myurls
+    volumes:
+      - ./conf:/usr/share/nginx/html/conf
     restart: always
-    #env_file: .env
+
+  myurls:
+    image: stilleshan/myurls:latest
+    # container_name: myurls
+    environment:
+      - MYURLS_DOMAIN=s.fansoar.com
+      - MYURLS_PROTO=https
+    volumes:
+      - ./data/myurls/logs:/app/logs    
     ports:
       - "8080:8080"
-    volumes:
-      - ./myurls/logs:/app/logs  
     depends_on:
-      - myurls-redis
-    entrypoint: ["/app/myurls", "-domain", "s.fansoar.com", "-conn", myurls-redis:6379]
-
-  myurls-redis:
-    image: "redis:7"
-    container_name: myurls-redis
+      - redis
     restart: always
+
+  redis:
+    image: redis:latest
+    # container_name: myurls-redis
     volumes:
       - ./data/redis:/data
-    expose:
-      - "6379"
+    restart: always
+    
+  subconverter:
+    image: stilleshan/subconverter
+    container_name: subconverter
+    ports:
+      - 25500:25500
+    restart: always
