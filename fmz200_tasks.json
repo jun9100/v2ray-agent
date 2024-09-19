@@ -1,5 +1,5 @@
 {
-  "name": "fmz200のTasks",
+  "name": "我的推送",
   "description": "收集一些自用的定时任务，更新日期：2024-05-26 19:30:00",
   "task": [
     "0 6-23/3 * * * https://raw.githubusercontent.com/Yuheng0101/X/main/Tasks/top.js, tag=热搜榜单, img-url=https://raw.githubusercontent.com/fmz200/wool_scripts/main/icons/others/hot_search.png, enabled=true",
